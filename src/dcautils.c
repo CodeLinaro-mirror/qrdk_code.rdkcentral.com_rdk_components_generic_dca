@@ -232,16 +232,26 @@ char *getsRotatedLog(char *buf, int buflen, char *name)
                ERR_CHK(rc);
                goto EXIT;
             }
-             LOG_FP = fopen(rotatedLog, "rb");
-             if(NULL == LOG_FP){
+
+            if(access(rotatedLog, F_OK) == -1)
+            {
+               LOG_FP = fopen(curLog, "rb");
+               if (NULL == LOG_FP)
+                  goto EXIT;
+            }
+            else
+            {
+               LOG_FP = fopen(rotatedLog, "rb");
+               if(NULL == LOG_FP)
+               {
                  LOG("Error in opening %s\n",rotatedLog);
                  LOG_FP = fopen(curLog, "rb");
                  if (NULL == LOG_FP)
-                      goto EXIT;
-             }
-             else {
-                 is_rotated_log = 1;
-             }
+                    goto EXIT;
+               }
+               else
+                  is_rotated_log = 1;
+            }
         }
         else {
           LOG_FP = fopen(curLog, "rb");

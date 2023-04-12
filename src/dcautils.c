@@ -207,10 +207,14 @@ char *getsRotatedLog(char *buf, int buflen, char *name)
   curLog_len = strlen(LOG_PATH) + strlen(name) + 1;
   rotatedLog_len = strlen(LOG_PATH) + strlen(name) + strlen(fileExtn) + 1;
   curLog = malloc(curLog_len);
-  rotatedLog = malloc(rotatedLog_len);
-  if((curLog == NULL) || (rotatedLog == NULL))
+  if(curLog == NULL){
      return NULL;
-
+  }
+  rotatedLog = malloc(rotatedLog_len);
+  if(rotatedLog == NULL){
+     free(curLog);
+     return NULL;
+  }
   if (NULL == LOG_FP)
   {
     long seek_value = 0;
@@ -233,34 +237,25 @@ char *getsRotatedLog(char *buf, int buflen, char *name)
                goto EXIT;
             }
 
-            if(access(rotatedLog, F_OK) == -1)
+            LOG_FP = fopen(rotatedLog, "rb");
+            if(NULL == LOG_FP)
             {
+               LOG("Error in opening %s\n",rotatedLog);
                LOG_FP = fopen(curLog, "rb");
                if (NULL == LOG_FP)
-                  goto EXIT;
+                   goto EXIT;
             }
             else
-            {
-               LOG_FP = fopen(rotatedLog, "rb");
-               if(NULL == LOG_FP)
-               {
-                 LOG("Error in opening %s\n",rotatedLog);
-                 LOG_FP = fopen(curLog, "rb");
-                 if (NULL == LOG_FP)
-                    goto EXIT;
-               }
-               else
-                  is_rotated_log = 1;
-            }
+               is_rotated_log = 1;
         }
         else {
-          LOG_FP = fopen(curLog, "rb");
+           LOG_FP = fopen(curLog, "rb");
 
-          if (NULL == LOG_FP)
-             goto EXIT;
+           if (NULL == LOG_FP)
+               goto EXIT;
 
         }
-      }
+     }
       else
       {
         long fileSize = 0;

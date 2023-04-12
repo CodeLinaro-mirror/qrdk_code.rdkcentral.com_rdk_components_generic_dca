@@ -125,8 +125,7 @@ int getProcUsage(char *processName) {
     * And here, we have source size more than 4k.
     */
     memcpy(pInfo.processName, processName, strlen(processName)+1);
-
-    sprintf(pidofCommand, "pidof %s", processName);
+    snprintf(pidofCommand,sizeof(pidofCommand),"pidof %s", processName);
 
 #ifdef LIBSYSWRAPPER_BUILD
     if (!(cmdPid = v_secure_popen("r", "pidof %s", processName)))

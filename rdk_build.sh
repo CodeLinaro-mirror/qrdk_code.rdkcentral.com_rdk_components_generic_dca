@@ -54,7 +54,7 @@ export COMBINED_ROOT=$RDK_PROJECT_ROOT_PATH
 export BUILDS_DIR=$RDK_PROJECT_ROOT_PATH
 export RDK_DIR=$BUILDS_DIR
 export PLATFORM_SDK=${RDK_TOOLCHAIN_PATH}
-if [ "$XCAM_MODEL" == "XHB1" ] || [ "$XCAM_MODEL" == "XHC3" ]; then
+if [ "$XCAM_MODEL" == "XHB1" ] || [ "$XCAM_MODEL" == "XHC3" ] || [ "$XCAM_MODEL" == "XHV1" ]; then
     source ${RDK_PROJECT_ROOT_PATH}/build/components/sdk/setenv2
     export CFLAGS="-DENABLE_XCAM_SUPPORT"
     export CXXFLAGS=$CFLAGS
@@ -66,6 +66,8 @@ fi
 if [ "$XCAM_MODEL" == "XHB1" ] || [ "$XCAM_MODEL" == "SCHC2" ] ; then
     export XHC1=true
     export CFLAGS+=" -I${RDK_PROJECT_ROOT_PATH}/opensource/include/libsafec -L${RDK_PROJECT_ROOT_PATH}/opensource/lib -lsafec-3.6.0"
+elif [ "$XCAM_MODEL" == "XHV1" ]; then
+    export CFLAGS+=" -L${RDK_PROJECT_ROOT_PATH}/opensource/lib -lintl -liconv"
 fi
 
 # default component name

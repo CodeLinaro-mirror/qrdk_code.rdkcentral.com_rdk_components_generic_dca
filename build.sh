@@ -56,7 +56,7 @@ if [ "$RDK_PLATFORM_SOC" == "intel" ]; then
     export GLIBS='-lglib-2.0 -lz'
 elif [ "$RDK_PLATFORM_SOC" = "broadcom" ]; then
     export GLIBS='-lglib-2.0 -lintl -lz'
-elif [ "$RDK_PLATFORM_SOC" = "ambarella" ]; then
+elif [ "$RDK_PLATFORM_SOC" = "ambarella" ] || [ "$RDK_PLATFORM_SOC" = "realtek" ]; then
     export GLIBS='-lglib-2.0'
 fi
 

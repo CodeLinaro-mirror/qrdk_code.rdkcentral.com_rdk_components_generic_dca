@@ -215,49 +215,49 @@ char *getsRotatedLog(char *buf, int buflen, char *name)
      free(curLog);
      return NULL;
   }
-  if (NULL == LOG_FP)
-  {
+  if (NULL == LOG_FP) {
     long seek_value = 0;
-    if (NULL != curLog)
-    {
-      rc = sprintf_s(curLog,curLog_len, "%s%s", LOG_PATH,name);
-      if(rc < EOK)
-      {
+    if (NULL != curLog) {
+      rc = sprintf_s(curLog, curLog_len, "%s%s", LOG_PATH, name);
+      if (rc < EOK) {
         ERR_CHK(rc);
         goto EXIT;
       }
 
-      if (0 != readLogSeek(name, &seek_value))
-      {
-         if(CUR_EXEC_COUNT == 0){
-            rc = sprintf_s(rotatedLog,rotatedLog_len, "%s%s%s", LOG_PATH,name,fileExtn);
-            if(rc < EOK)
-            {
-               ERR_CHK(rc);
-               goto EXIT;
-            }
+      if (0 != readLogSeek(name, & seek_value)) {
+        if (CUR_EXEC_COUNT == 0) {
+          rc = sprintf_s(rotatedLog, rotatedLog_len, "%s%s%s", LOG_PATH, name, fileExtn);
+          if (rc < EOK) {
+            ERR_CHK(rc);
+            goto EXIT;
+          }
 
+          int fd = open(rotatedLog, O_RDONLY);
+          if (fd == -1) {
+            if (errno != ENOENT) {
+              LOG("Error in opening %s\n", rotatedLog);
+            }
+            LOG_FP = fopen(curLog, "rb");
+          } else {
+            close(fd);
             LOG_FP = fopen(rotatedLog, "rb");
-            if(NULL == LOG_FP)
-            {
-               LOG("Error in opening %s\n",rotatedLog);
-               LOG_FP = fopen(curLog, "rb");
-               if (NULL == LOG_FP)
-                   goto EXIT;
+            if (NULL == LOG_FP) {
+              LOG("Error in opening %s\n", rotatedLog);
+              LOG_FP = fopen(curLog, "rb");
+            } else {
+              is_rotated_log = 1;
             }
-            else
-               is_rotated_log = 1;
-        }
-        else {
-           LOG_FP = fopen(curLog, "rb");
+          }
+          if (NULL == LOG_FP)
+            goto EXIT;
+        } else {
+          LOG_FP = fopen(curLog, "rb");
 
-           if (NULL == LOG_FP)
-               goto EXIT;
+          if (NULL == LOG_FP)
+            goto EXIT;
 
         }
-     }
-      else
-      {
+      } else {
         long fileSize = 0;
 
         LOG_FP = fopen(curLog, "rb");

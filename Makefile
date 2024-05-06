@@ -42,19 +42,28 @@ ifneq ($(XHC1),true)
     CFLAGS += -DSAFEC_DUMMY_API
 endif
 
-all:src/dca.c
-	$(CC) $(CFLAGS) $(LDFLAGS)  src/dca.c src/dcalist.c src/dcajson.c src/dcaproc.c src/dcautils.c -o dca
-	$(CC) $(CFLAGS) src/dcamem.c -o dcamem
-	$(CC) $(CFLAGS) src/dcacpu.c -o dcacpu
-	$(GXX) $(CFLAGS) src/dcaprocess.cpp -o dcaprocess
-build:src/dca.c
+ifeq ($(XCAM_MODEL),XHV1)
+    TARGETS := dcaprocess
+else
+    TARGETS := dca dcamem dcacpu dcaprocess
+endif
+
+all: $(TARGETS)
+
+dca: src/dca.c
 	$(CC) $(CFLAGS) $(LDFLAGS) src/dca.c src/dcalist.c src/dcajson.c src/dcaproc.c src/dcautils.c -o dca
+
+dcamem: src/dcamem.c
 	$(CC) $(CFLAGS) src/dcamem.c -o dcamem
+
+dcacpu: src/dcacpu.c
 	$(CC) $(CFLAGS) src/dcacpu.c -o dcacpu
+
+dcaprocess: src/dcaprocess.cpp
 	$(GXX) $(CFLAGS) src/dcaprocess.cpp -o dcaprocess
+
+build: all
+
 clean:
-	$(RM) dcamem
-	$(RM) dcacpu
-	$(RM) dca
-	$(RM) dcaprocess
+	$(RM) $(TARGETS)
 

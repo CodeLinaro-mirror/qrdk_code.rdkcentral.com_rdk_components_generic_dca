@@ -116,9 +116,11 @@ function build()
 
        cd .
        sh $DCA_PATH/build.sh build
-       cp $DCA_PATH/dca $RDK_FSROOT_PATH/usr/bin/
-       cp $DCA_PATH/dcacpu $RDK_FSROOT_PATH/usr/bin/
-       cp $DCA_PATH/dcamem $RDK_FSROOT_PATH/usr/bin/
+       if [ "$XCAM_MODEL" != "XHV1" ]; then
+           cp $DCA_PATH/dca $RDK_FSROOT_PATH/usr/bin/
+           cp $DCA_PATH/dcacpu $RDK_FSROOT_PATH/usr/bin/
+           cp $DCA_PATH/dcamem $RDK_FSROOT_PATH/usr/bin/
+       fi
        cp $DCA_PATH/dcaprocess $RDK_FSROOT_PATH/usr/bin/
 }
 

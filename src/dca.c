@@ -547,7 +547,6 @@ int processCountPattern(char *logfile, GList *pchead, int pcIndex, GList **rdkec
         handleRDKErrCodes(rdkec_head, temp);
       }
     }
-    usleep(USLEEP_SEC);
   }
   return 0;
 }
@@ -820,7 +819,6 @@ int parseFile(char *fname)
           return -1;
         }
     }
-    usleep(USLEEP_SEC);
   }
   processPattern(&prevfile, filename, &rdkec_head, pchead, pcIndex);
   writeLogSeek(filename, LAST_SEEK_VALUE);
